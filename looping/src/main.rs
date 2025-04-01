@@ -20,8 +20,6 @@ fn main() {
         if user_input == correct_answer {
             println!("Number of trials: {}", attempts);
             break;
-        } else {
-            println!("Incorrect. Try again.\n");
         }
     }
 }
