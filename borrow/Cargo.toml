@@ -1,5 +1,5 @@
 [package]
-name = "str_len"
+name = "borrow"
 version = "0.1.0"
 edition = "2024"
 
