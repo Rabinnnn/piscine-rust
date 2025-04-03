@@ -5,6 +5,7 @@ pub fn nbr_function(c: i32) -> (i32, f64, f64) {
     // Exponential function: e^value
     let exp_value = E.powf(c as f64); // Convert i32 to f64 for the exponential function
 
+    // Natural logarithm of the absolute value: ln(|value|)
     let log_value = (c.abs() as f64).ln(); // Convert i32 to f64 for the logarithm
 
     // Return the tuple with i32 and f64 values
