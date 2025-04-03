@@ -1,37 +1,44 @@
 pub fn delete_and_backspace(s: &mut String) {
+    let chars: Vec<char> = s.chars().collect();
     let mut result = String::new();
-    let mut chars = s.chars().collect::<Vec<_>>();
     let mut i = 0;
-    
     while i < chars.len() {
         match chars[i] {
             '-' => {
-                if !result.is_empty() {
-                    result.pop();
-                }
-            }
+                result.pop(); // Backspace: remove last character in the output.
+                i += 1;
+            },
             '+' => {
+                // Count consecutive '+' operators.
+                let mut count = 0;
+                while i < chars.len() && chars[i] == '+' {
+                    count += 1;
+                    i += 1;
+                }
+                // Skip the next `count` characters (delete operation).
+                i += count;
+            },
+            c => {
+                result.push(c);
                 i += 1;
             }
-            c => result.push(c),
         }
-        i += 1;
     }
     *s = result;
 }
 
 pub fn do_operations(v: &mut [String]) {
-    for expr in v.iter_mut() {
-        let tokens: Vec<&str> = expr.split_whitespace().collect();
-        if tokens.len() == 3 {
-            if let (Ok(lhs), Ok(rhs)) = (tokens[0].parse::<i32>(), tokens[2].parse::<i32>()) {
-                let result = match tokens[1] {
-                    "+" => lhs + rhs,
-                    "-" => lhs - rhs,
-                    _ => continue,
-                };
-                *expr = result.to_string();
-            }
+    for s in v.iter_mut() {
+        if let Some(op_pos) = s.find(|c: char| c == '+' || c == '-') {
+            let (left, right) = s.split_at(op_pos);
+            let x = left.trim().parse::<i32>().unwrap_or(0);
+            let y = right[1..].trim().parse::<i32>().unwrap_or(0);
+            
+            *s = match s.chars().nth(op_pos) {
+                Some('+') => (x + y).to_string(),
+                Some('-') => (x - y).to_string(),
+                _ => s.clone(),
+            };
         }
     }
 }
