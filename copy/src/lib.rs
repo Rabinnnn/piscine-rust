@@ -1,30 +1,32 @@
-use std::f64::consts::E;
 use std::f64;
 
 pub fn nbr_function(c: i32) -> (i32, f64, f64) {
-    let exp_value = E.powf(c as f64);
-    let log_value = (c.abs() as f64).ln();
-    (c, exp_value, log_value)
+    let exp_value = f64::exp(c as f64); // Exponential of the value
+    let ln_value = if c == 0 { f64::NEG_INFINITY } else { f64::ln(c.abs() as f64) }; // Natural log of the absolute value, handle 0 case
+    (c, exp_value, ln_value)
 }
 
 pub fn str_function(a: String) -> (String, String) {
-    let mut exp_string = String::new();
+    let values: Vec<f64> = a
+        .split_whitespace()
+        .filter_map(|s| s.parse::<i32>().ok())
+        .map(|n| f64::exp(n as f64)) // Exponential of each number
+        .collect();
 
-    for ch in a.chars() {
-        if let Some(digit) = ch.to_digit(10) {
-            let exp_value = E.powf(digit as f64);
-            exp_string.push_str(&format!("{:.16} ", exp_value));  // Full precision
-        } else {
-            continue;
-        }
-    }
+    let exp_string = values
+        .iter()
+        .map(|v| v.to_string())
+        .collect::<Vec<String>>()
+        .join(" "); // Join the exp results into a single string
 
     (a, exp_string)
 }
 
 pub fn vec_function(b: Vec<i32>) -> (Vec<i32>, Vec<f64>) {
-    let log_values: Vec<f64> = b.iter()
-        .map(|&value| (value.abs() as f64).ln())
+    let ln_values: Vec<f64> = b
+        .iter()
+        .map(|&x| f64::ln(x.abs() as f64)) // Log of the absolute value of each element
         .collect();
-    (b, log_values)
+
+    (b, ln_values)
 }
