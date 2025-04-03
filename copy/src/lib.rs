@@ -32,10 +32,11 @@ pub fn str_function(value: String) -> (String, String) {
 
 
 pub fn vec_function(values: Vec<f64>) -> (Vec<f64>, Vec<f64>) {
-    let log_values: Vec<f64> = values.into_iter()
-        .map(|value| value.abs().ln()) // Calculate ln(|value|)
+    // Borrow the `values` vector and use `iter()` to iterate over it
+    let log_values: Vec<f64> = values.iter()
+        .map(|&value| value.abs().ln()) // Calculate ln(|value|)
         .collect();
 
-    // Return the original vector and the transformed vector
+    // Return the original vector (ownership is preserved) and the transformed vector
     (values, log_values)
-}   
+}
