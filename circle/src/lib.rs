@@ -1,38 +1,23 @@
-use std::f64::consts::PI;
-
-#[derive(Debug, Clone, Copy)]
-pub struct Point(pub f64, pub f64);
-
-impl Point {
-    pub fn distance(&self, other: &Point) -> f64 {
-        ((self.0 - other.0).powi(2) + (self.1 - other.1).powi(2)).sqrt()
-    }
+#[derive(Debug, Eq, PartialEq, Clone)]
+pub struct Light {
+	pub alias: String,
+	pub brightness: u8,
 }
 
-#[derive(Debug, Clone, Copy)]
-pub struct Circle {
-    pub center: Point,
-    pub radius: f64,
+impl Light {
+	pub fn new(alias: &str) -> Self {
+		Light{
+			alias : alias.to_string(),
+			brightness : 0
+		}
+	}
 }
 
-impl Circle {
-    pub fn new(x: f64, y: f64, radius: f64) -> Self {
-        Circle {
-            center: Point(x, y),
-            radius,
-        }
-    }
+pub fn change_brightness(lights: &mut Vec<Light>, alias: &str, value: u8) {
+	for light in lights.iter_mut(){
+		if light.alias== alias.to_string(){
+			light.brightness= value
+		}
+	}
 
-    pub fn diameter(&self) -> f64 {
-        self.radius * 2.0
-    }
-
-    pub fn area(&self) -> f64 {
-        PI * self.radius.powi(2)
-    }
-
-    pub fn intersect(&self, other: &Circle) -> bool {
-        let dist = self.center.distance(&other.center);
-        dist <= self.radius + other.radius
-    }
 }
