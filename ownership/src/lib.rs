@@ -6,12 +6,12 @@ pub fn first_subword(mut s: String) -> String {
         result.push(first);
     }
     
-    for c in chars {
+    for c in chars (
         if c.is_uppercase() || c == '_' {
             break;
         }
         result.push(c);
-    }
+    )
     
     result
 }
