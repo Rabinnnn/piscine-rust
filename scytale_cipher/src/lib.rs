@@ -1,27 +1,28 @@
-fn scytale_cipher(message: String, i: u32) -> String {
-    let i = i as usize;
-    let chars: Vec<char> = message.chars().collect();
-    let len = chars.len();
-
-    // Calculate number of columns needed
-    let columns = (len as f32 / i as f32).ceil() as usize;
-
-    // Pad the message with spaces if needed
-    let mut padded_chars = chars.clone();
-    while padded_chars.len() < i * columns {
-        padded_chars.push(' ');
+pub fn scytale_cipher(s: String, i: u32) -> String {
+    // Return original string if i is 1 or greater than or equal to string length
+    if i as usize >= s.chars().count() || i == 1 {
+        return s.to_string();
     }
 
-    // Read column-wise
-    let mut result = String::new();
-    for col in 0..columns {
-        for row in 0..i {
-            let index = row * columns + col;
-            if index < padded_chars.len() {
-                result.push(padded_chars[index]);
-            }
-        }
+    // Calculate number of columns (width) based on ceiling of length / i
+    let width = (s.chars().count() as f64 / i as f64).ceil() as usize;
+
+    // Create a 2D vector (table) with i rows and 'width' columns, initialized with spaces
+    let mut table = vec![vec![' '; width]; i as usize];
+
+    // Fill the table column-wise with characters from the input string
+    for (pos, element) in s.chars().enumerate() {
+        let col = pos % i as usize;   // Determine column index
+        let row = pos / i as usize;   // Determine row index
+
+        table[col][row] = element;    // Place character at the calculated position
     }
 
-    result
+    // Flatten the table row-wise and collect characters into a single string
+    table
+        .iter()
+        .flatten()
+        .collect::<String>()
+        .trim_end()     // Remove trailing spaces
+        .to_string()    // Convert to String
 }
