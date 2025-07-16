@@ -1,25 +1,28 @@
-pub struct Message<'a> {
-    content: &'a str,
+use std::collections::HashMap;
+
+pub struct Message {
+    content: String,
+    user: String,
 }
 
-impl<'a> Message<'a> {
-    pub fn new(content: &'a str) -> Self {
-        Self { content }
+impl Message {
+    pub fn new(ms: String, u: String) -> Message {
+        Message { content: ms, user: u }
     }
 
-    pub fn send_ms(&self) -> Option<&'a str> {
-        if self.content.is_empty() || self.content.contains("stupid") {
+    pub fn send_ms(&self) -> Option<&str> {
+        let lower = self.content.to_lowercase();
+        if lower.is_empty() || lower.contains("stupid") {
             None
         } else {
-            Some(self.content)
+            Some(self.content.as_str())
         }
     }
 }
 
-pub fn check_ms(message: &str) -> Result<&str, &str> {
-    let msg = Message::new(message);
-    match msg.send_ms() {
-        Some(valid) => Ok(valid),
-        None => Err("ERROR: illegal"),
+pub fn check_ms(ms: &Message) -> (bool, &str) {
+    match ms.send_ms() {
+        Some(text) => (true, text),
+        None => (false, "ERROR: illegal"),
     }
 }
